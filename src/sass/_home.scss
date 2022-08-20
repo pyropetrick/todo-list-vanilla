@@ -20,6 +20,7 @@
   }
   &__body {
     display: flex;
+    align-items:center;
     color: grey;
 
     &-counter-all {
@@ -49,6 +50,17 @@
   margin: 0 auto;
   padding: 10px;
   width: 500px;
+
+  &.completed-todo {
+    background-color: #7e7373;
+    
+    .todo-item__label-title {
+      text-decoration: line-through;
+    }
+    .todo-item__date {
+      color: white;
+    }
+  }
   &__btn-delete {
     align-self: flex-end;
     border: 1px solid black;
@@ -70,6 +82,7 @@
       color: grey;
       border: 1px solid black;
       border-radius: 5px;
+      text-align: center;
     }
 
   }
@@ -86,3 +99,4 @@
     color: grey;
   }
 }
+

@@ -78,6 +78,7 @@ input, button, textarea, select {
 
 .todo-list__body {
   color: gray;
+  align-items: center;
   display: flex;
 }
 
@@ -109,6 +110,18 @@ input, button, textarea, select {
   display: flex;
 }
 
+.todo-item.completed-todo {
+  background-color: #7e7373;
+}
+
+.todo-item.completed-todo .todo-item__label-title {
+  text-decoration: line-through;
+}
+
+.todo-item.completed-todo .todo-item__date {
+  color: #fff;
+}
+
 .todo-item__btn-delete {
   text-align: center;
   width: 30px;
@@ -127,6 +140,7 @@ input, button, textarea, select {
 .todo-item__label-title {
   width: 300px;
   color: gray;
+  text-align: center;
   background-color: #fff;
   border: 1px solid #000;
   border-radius: 5px;

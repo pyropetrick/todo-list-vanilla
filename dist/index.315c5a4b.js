@@ -142,14 +142,14 @@
       this[globalName] = mainExports;
     }
   }
-})({"jQVXF":[function(require,module,exports) {
+})({"1PvAy":[function(require,module,exports) {
 "use strict";
 var global = arguments[3];
 var HMR_HOST = null;
 var HMR_PORT = null;
 var HMR_SECURE = false;
 var HMR_ENV_HASH = "d6ea1d42532a7575";
-module.bundle.HMR_BUNDLE_ID = "0bcb44a518dbc454";
+module.bundle.HMR_BUNDLE_ID = "631d3710315c5a4b";
 /* global HMR_HOST, HMR_PORT, HMR_ENV_HASH, HMR_SECURE, chrome, browser, globalThis, __parcel__import__, __parcel__importScripts__, ServiceWorkerGlobalScope */ /*::
 import type {
   HMRAsset,
@@ -531,12 +531,204 @@ function hmrAcceptRun(bundle, id) {
     acceptedAssets[id] = true;
 }
 
-},{}],"1SICI":[function(require,module,exports) {
-var _initJs = require("./init.js");
-var _todos = require("./todos");
-document.addEventListener("DOMContentLoaded", (0, _initJs.init));
-document.addEventListener("DOMContentLoaded", (0, _todos.initStorage));
+},{}],"66sci":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "addTodo", ()=>addTodo);
+parcelHelpers.export(exports, "deleteAll", ()=>deleteAll);
+parcelHelpers.export(exports, "deleteLast", ()=>deleteLast);
+parcelHelpers.export(exports, "showAll", ()=>showAll);
+parcelHelpers.export(exports, "showComplete", ()=>showComplete);
+parcelHelpers.export(exports, "removeTodo", ()=>removeTodo);
+parcelHelpers.export(exports, "checkTodo", ()=>checkTodo);
+parcelHelpers.export(exports, "searchTodo", ()=>searchTodo);
+parcelHelpers.export(exports, "renderTodo", ()=>renderTodo);
+parcelHelpers.export(exports, "renderCounters", ()=>renderCounters);
+parcelHelpers.export(exports, "initStorage", ()=>initStorage);
+var _storage = require("./storage");
+let todos = [];
+const addTodo = ()=>{
+    let inputTitle = document.querySelector(".todo-list__header-input-enter");
+    let date = new Date;
+    let options = {
+        weekday: "short",
+        month: "short",
+        day: "numeric",
+        hour: "numeric",
+        minute: "numeric"
+    };
+    let todo = {
+        id: Date.now(),
+        title: inputTitle.value,
+        isCompleted: false,
+        date: date.toLocaleString("ru", options)
+    };
+    todos.push(todo);
+    (0, _storage.addToStorage)({
+        key: "todos",
+        value: todos
+    });
+    renderTodo();
+    inputTitle.value = "";
+};
+function getTodoCompleted() {
+    return todos.filter(({ isCompleted  })=>isCompleted);
+}
+const deleteAll = ()=>{
+    todos = [];
+    (0, _storage.deleteFromStorage)("todos");
+    renderTodo();
+};
+const deleteLast = ()=>{
+    todos.pop();
+    todos.length ? (0, _storage.addToStorage)({
+        key: "todos",
+        value: todos
+    }) : (0, _storage.deleteFromStorage)("todos");
+    renderTodo();
+};
+const showAll = ()=>{
+    renderTodo();
+};
+const showComplete = ()=>{
+    let filterTodo = getTodoCompleted();
+    renderTodo(filterTodo);
+};
+const removeTodo = ({ target  })=>{
+    if (target.classList.contains("todo-item__btn-delete")) {
+        let todoItem = target.parentNode;
+        let todoId = +todoItem.getAttribute("id");
+        let todoIdx = todos.findIndex(({ id  })=>todoId === id);
+        todos.splice(todoIdx, 1);
+        (0, _storage.addToStorage)({
+            key: "todos",
+            value: todos
+        });
+        renderTodo();
+    }
+};
+const checkTodo = ({ target  })=>{
+    if (target.classList.contains("todo-item__input-check-complete")) {
+        let todoItem = target.parentNode.parentNode;
+        let todoId = +todoItem.getAttribute("id");
+        let todoIdx = todos.findIndex(({ id  })=>todoId === id);
+        todos[todoIdx].isCompleted = target.checked;
+        (0, _storage.addToStorage)({
+            key: "todos",
+            value: todos
+        });
+        renderTodo();
+    }
+};
+const searchTodo = ({ target  })=>{
+    let searchValue = target.value;
+    let searchTodo1 = todos.filter(({ title  })=>title.includes(searchValue));
+    renderTodo(searchTodo1);
+};
+const renderTodo = (list = todos)=>{
+    let todoList = document.querySelector(".todo-list__list");
+    todoList.innerHTML = "";
+    list.forEach(({ id , title , isCompleted , date  })=>{
+        // create li
+        let todoItem = document.createElement("li");
+        todoItem.classList.add("todo-list__todo-item");
+        todoItem.classList.add("todo-item");
+        todoItem.setAttribute("id", id);
+        // button
+        let deleteBtn = document.createElement("button");
+        deleteBtn.classList.add("todo-item__btn-delete");
+        deleteBtn.classList.add("action-button");
+        deleteBtn.innerText = "x";
+        // label
+        let todoLabel = document.createElement("label");
+        todoLabel.classList.add("todo-item__label");
+        // input
+        let todoCheckBox = document.createElement("input");
+        todoCheckBox.classList.add("todo-item__input-check-complete");
+        todoCheckBox.setAttribute("type", "checkbox");
+        if (isCompleted) {
+            todoCheckBox.setAttribute("checked", "checked");
+            todoItem.classList.add("completed-todo");
+        } else todoItem.classList.remove("completed-todo");
+        // span
+        let todoTitle = document.createElement("span");
+        todoTitle.classList.add("todo-item__label-title");
+        todoTitle.innerText = title;
+        // date
+        let todoDate = document.createElement("p");
+        todoDate.classList.add("todo-item__date");
+        todoDate.innerText = date;
+        todoLabel.append(todoCheckBox);
+        todoLabel.append(todoTitle);
+        todoItem.append(deleteBtn);
+        todoItem.append(todoLabel);
+        todoItem.append(todoDate);
+        todoList.append(todoItem);
+    });
+    // counters
+    renderCounters();
+};
+const renderCounters = ()=>{
+    let countAll = document.querySelector(".todo-list__body-counter-all");
+    countAll.innerText = `All:${todos.length}`;
+    let countCompleted = document.querySelector(".todo-list__body-counter-completed");
+    let counterCompleted = getTodoCompleted().length;
+    countCompleted.innerText = `Completed: ${counterCompleted}`;
+};
+const initStorage = ()=>{
+    // get storage
+    if ((0, _storage.getFromStorage)("todos")) {
+        todos = (0, _storage.getFromStorage)("todos");
+        renderTodo();
+    }
+};
 
-},{"./init.js":"l17dj","./todos":"66sci"}]},["jQVXF","1SICI"], "1SICI", "parcelRequire54eb")
+},{"./storage":"h0qAZ","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"h0qAZ":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "addToStorage", ()=>addToStorage);
+parcelHelpers.export(exports, "deleteFromStorage", ()=>deleteFromStorage);
+parcelHelpers.export(exports, "getFromStorage", ()=>getFromStorage);
+const addToStorage = ({ key , value  })=>{
+    return localStorage.setItem(key, JSON.stringify(value));
+};
+const deleteFromStorage = (key)=>{
+    return localStorage.removeItem(key);
+};
+const getFromStorage = (key)=>{
+    return localStorage.getItem(key) ? JSON.parse(localStorage.getItem(key)) : undefined;
+};
 
-//# sourceMappingURL=index.18dbc454.js.map
+},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"gkKU3":[function(require,module,exports) {
+exports.interopDefault = function(a) {
+    return a && a.__esModule ? a : {
+        default: a
+    };
+};
+exports.defineInteropFlag = function(a) {
+    Object.defineProperty(a, "__esModule", {
+        value: true
+    });
+};
+exports.exportAll = function(source, dest) {
+    Object.keys(source).forEach(function(key) {
+        if (key === "default" || key === "__esModule" || dest.hasOwnProperty(key)) return;
+        Object.defineProperty(dest, key, {
+            enumerable: true,
+            get: function() {
+                return source[key];
+            }
+        });
+    });
+    return dest;
+};
+exports.export = function(dest, destName, get) {
+    Object.defineProperty(dest, destName, {
+        enumerable: true,
+        get: get
+    });
+};
+
+},{}]},["1PvAy","66sci"], "66sci", "parcelRequire54eb")
+
+//# sourceMappingURL=index.315c5a4b.js.map

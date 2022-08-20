@@ -59,7 +59,7 @@ export const removeTodo = ({target}) => {
 
 export const checkTodo = ({target}) => {
     if(target.classList.contains('todo-item__input-check-complete')) {
-        let todoItem = target.parentNode.parentNode
+        let todoItem = target.parentNode.parentNode;
         let todoId = +todoItem.getAttribute('id');
         let todoIdx = todos.findIndex(({id}) => todoId === id);
         todos[todoIdx].isCompleted = target.checked;
@@ -97,7 +97,8 @@ export const renderTodo = (list = todos) => {
         todoCheckBox.setAttribute('type', 'checkbox');
         if (isCompleted) {
             todoCheckBox.setAttribute('checked', 'checked')
-        }
+            todoItem.classList.add('completed-todo')
+        } else {todoItem.classList.remove('completed-todo')}
         // span
         let todoTitle = document.createElement('span');
         todoTitle.classList.add('todo-item__label-title');
@@ -117,6 +118,8 @@ export const renderTodo = (list = todos) => {
     // counters
     renderCounters()
 }
+
+
 export const renderCounters = () => {
     let countAll = document.querySelector('.todo-list__body-counter-all');
     countAll.innerText = `All:${todos.length}`;

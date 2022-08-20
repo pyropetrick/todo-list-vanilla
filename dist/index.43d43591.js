@@ -142,14 +142,14 @@
       this[globalName] = mainExports;
     }
   }
-})({"jQVXF":[function(require,module,exports) {
+})({"fptvI":[function(require,module,exports) {
 "use strict";
 var global = arguments[3];
 var HMR_HOST = null;
 var HMR_PORT = null;
 var HMR_SECURE = false;
 var HMR_ENV_HASH = "d6ea1d42532a7575";
-module.bundle.HMR_BUNDLE_ID = "0bcb44a518dbc454";
+module.bundle.HMR_BUNDLE_ID = "ad8b822743d43591";
 /* global HMR_HOST, HMR_PORT, HMR_ENV_HASH, HMR_SECURE, chrome, browser, globalThis, __parcel__import__, __parcel__importScripts__, ServiceWorkerGlobalScope */ /*::
 import type {
   HMRAsset,
@@ -531,12 +531,39 @@ function hmrAcceptRun(bundle, id) {
     acceptedAssets[id] = true;
 }
 
-},{}],"1SICI":[function(require,module,exports) {
-var _initJs = require("./init.js");
-var _todos = require("./todos");
-document.addEventListener("DOMContentLoaded", (0, _initJs.init));
-document.addEventListener("DOMContentLoaded", (0, _todos.initStorage));
+},{}],"l17dj":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "init", ()=>init);
+var _todosJs = require("./todos.js");
+const init = ()=>{
+    // add todo
+    let addBtn = document.querySelector(".todo-list__header-btn-add");
+    addBtn.addEventListener("click", (0, _todosJs.addTodo));
+    // delete all
+    let dltAllBtn = document.querySelector(".todo-list__header-btn-delete-all");
+    dltAllBtn.addEventListener("click", (0, _todosJs.deleteAll));
+    // delete last
+    let dltLastBtn = document.querySelector(".todo-list__header-btn-delete-last");
+    dltLastBtn.addEventListener("click", (0, _todosJs.deleteLast));
+    // show all
+    let showAllBtn = document.querySelector(".todo-list__body-btn-show-all");
+    showAllBtn.addEventListener("click", (0, _todosJs.showAll));
+    // remove todo
+    let listTodo = document.querySelector(".todo-list__list");
+    listTodo.addEventListener("click", (0, _todosJs.removeTodo));
+    // check todo
+    listTodo.addEventListener("click", (0, _todosJs.checkTodo));
+    // show completed
+    let showCmlBtn = document.querySelector(".todo-list__body-btn-show-completed");
+    showCmlBtn.addEventListener("click", (0, _todosJs.showComplete));
+    // search todo
+    let searchInp = document.querySelector(".todo-list__body-input-search");
+    searchInp.addEventListener("input", (0, _todosJs.searchTodo));
+    // render counter
+    (0, _todosJs.renderCounters)();
+};
 
-},{"./init.js":"l17dj","./todos":"66sci"}]},["jQVXF","1SICI"], "1SICI", "parcelRequire54eb")
+},{"./todos.js":"66sci","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}]},["fptvI","l17dj"], "l17dj", "parcelRequire54eb")
 
-//# sourceMappingURL=index.18dbc454.js.map
+//# sourceMappingURL=index.43d43591.js.map
