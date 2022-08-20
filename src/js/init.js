@@ -1,3 +1,4 @@
+
 import {
     addTodo,
     deleteAll,
@@ -10,8 +11,7 @@ import {
     renderTodo,
     renderCounters
 } from './todos.js'
-import {getFromStorage} from "./storage";
-export let todos = [];
+
 export const init = () => {
         // add todo
         let addBtn = document.querySelector('.todo-list__header-btn-add');
@@ -38,12 +38,6 @@ export const init = () => {
         // search todo
         let searchInp = document.querySelector('.todo-list__body-input-search');
         searchInp.addEventListener('input', searchTodo);
-
-        // get storage
-        if (getFromStorage('todos'))  {
-            todos = getFromStorage('todos')
-            renderTodo()
-        }
 
         // render counter
         renderCounters();

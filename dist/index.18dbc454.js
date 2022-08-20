@@ -533,16 +533,15 @@ function hmrAcceptRun(bundle, id) {
 
 },{}],"1SICI":[function(require,module,exports) {
 var _initJs = require("./init.js");
+var _todos = require("./todos");
 document.addEventListener("DOMContentLoaded", (0, _initJs.init));
+document.addEventListener("DOMContentLoaded", (0, _todos.initStorage));
 
-},{"./init.js":"l17dj"}],"l17dj":[function(require,module,exports) {
+},{"./init.js":"l17dj","./todos":"66sci"}],"l17dj":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
-parcelHelpers.export(exports, "todos", ()=>todos);
 parcelHelpers.export(exports, "init", ()=>init);
 var _todosJs = require("./todos.js");
-var _storage = require("./storage");
-let todos = [];
 const init = ()=>{
     // add todo
     let addBtn = document.querySelector(".todo-list__header-btn-add");
@@ -567,16 +566,11 @@ const init = ()=>{
     // search todo
     let searchInp = document.querySelector(".todo-list__body-input-search");
     searchInp.addEventListener("input", (0, _todosJs.searchTodo));
-    // get storage
-    if ((0, _storage.getFromStorage)("todos")) {
-        todos = (0, _storage.getFromStorage)("todos");
-        (0, _todosJs.renderTodo)();
-    }
     // render counter
     (0, _todosJs.renderCounters)();
 };
 
-},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","./todos.js":"66sci","./storage":"h0qAZ"}],"gkKU3":[function(require,module,exports) {
+},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","./todos.js":"66sci"}],"gkKU3":[function(require,module,exports) {
 exports.interopDefault = function(a) {
     return a && a.__esModule ? a : {
         default: a
@@ -619,26 +613,35 @@ parcelHelpers.export(exports, "checkTodo", ()=>checkTodo);
 parcelHelpers.export(exports, "searchTodo", ()=>searchTodo);
 parcelHelpers.export(exports, "renderTodo", ()=>renderTodo);
 parcelHelpers.export(exports, "renderCounters", ()=>renderCounters);
+parcelHelpers.export(exports, "initStorage", ()=>initStorage);
 var _storage = require("./storage");
-var _initJs = require("./init.js");
+let todos = [];
 const addTodo = ()=>{
     let inputTitle = document.querySelector(".todo-list__header-input-enter");
+    let date = new Date;
+    let options = {
+        weekday: "short",
+        month: "short",
+        day: "numeric",
+        hour: "numeric",
+        minute: "numeric"
+    };
     let todo = {
         id: Date.now(),
         title: inputTitle.value,
         isCompleted: false,
-        date: new Date
+        date: date.toLocaleString("ru", options)
     };
-    (0, _initJs.todos).push(todo);
+    todos.push(todo);
     (0, _storage.addToStorage)({
         key: "todos",
-        value: (0, _initJs.todos)
+        value: todos
     });
     renderTodo();
     inputTitle.value = "";
 };
 function getTodoCompleted() {
-    return (0, _initJs.todos).filter(({ isCompleted  })=>isCompleted);
+    return todos.filter(({ isCompleted  })=>isCompleted);
 }
 const deleteAll = ()=>{
     todos = [];
@@ -646,10 +649,10 @@ const deleteAll = ()=>{
     renderTodo();
 };
 const deleteLast = ()=>{
-    (0, _initJs.todos).pop();
-    (0, _initJs.todos).length ? (0, _storage.addToStorage)({
+    todos.pop();
+    todos.length ? (0, _storage.addToStorage)({
         key: "todos",
-        value: (0, _initJs.todos)
+        value: todos
     }) : (0, _storage.deleteFromStorage)("todos");
     renderTodo();
 };
@@ -664,11 +667,11 @@ const removeTodo = ({ target  })=>{
     if (target.classList.contains("todo-item__btn-delete")) {
         let todoItem = target.parentNode;
         let todoId = +todoItem.getAttribute("id");
-        let todoIdx = (0, _initJs.todos).findIndex(({ id  })=>todoId === id);
-        (0, _initJs.todos).splice(todoIdx, 1);
+        let todoIdx = todos.findIndex(({ id  })=>todoId === id);
+        todos.splice(todoIdx, 1);
         (0, _storage.addToStorage)({
             key: "todos",
-            value: (0, _initJs.todos)
+            value: todos
         });
         renderTodo();
     }
@@ -677,21 +680,21 @@ const checkTodo = ({ target  })=>{
     if (target.classList.contains("todo-item__input-check-complete")) {
         let todoItem = target.parentNode.parentNode;
         let todoId = +todoItem.getAttribute("id");
-        let todoIdx = (0, _initJs.todos).findIndex(({ id  })=>todoId === id);
-        (0, _initJs.todos)[todoIdx].isCompleted = target.checked;
+        let todoIdx = todos.findIndex(({ id  })=>todoId === id);
+        todos[todoIdx].isCompleted = target.checked;
         (0, _storage.addToStorage)({
             key: "todos",
-            value: (0, _initJs.todos)
+            value: todos
         });
         renderTodo();
     }
 };
 const searchTodo = ({ target  })=>{
     let searchValue = target.value;
-    let searchTodo1 = (0, _initJs.todos).filter(({ title  })=>title.includes(searchValue));
+    let searchTodo1 = todos.filter(({ title  })=>title.includes(searchValue));
     renderTodo(searchTodo1);
 };
-const renderTodo = (list = (0, _initJs.todos))=>{
+const renderTodo = (list = todos)=>{
     let todoList = document.querySelector(".todo-list__list");
     todoList.innerHTML = "";
     list.forEach(({ id , title , isCompleted , date  })=>{
@@ -720,14 +723,7 @@ const renderTodo = (list = (0, _initJs.todos))=>{
         // date
         let todoDate = document.createElement("p");
         todoDate.classList.add("todo-item__date");
-        let options = {
-            weekday: "short",
-            month: "short",
-            day: "numeric",
-            hour: "numeric",
-            minute: "numeric"
-        };
-        todoDate.innerText = date.toLocaleString("ru", options);
+        todoDate.innerText = date;
         todoLabel.append(todoCheckBox);
         todoLabel.append(todoTitle);
         todoItem.append(deleteBtn);
@@ -740,13 +736,20 @@ const renderTodo = (list = (0, _initJs.todos))=>{
 };
 const renderCounters = ()=>{
     let countAll = document.querySelector(".todo-list__body-counter-all");
-    countAll.innerText = `All:${(0, _initJs.todos).length}`;
+    countAll.innerText = `All:${todos.length}`;
     let countCompleted = document.querySelector(".todo-list__body-counter-completed");
     let counterCompleted = getTodoCompleted().length;
     countCompleted.innerText = `Completed: ${counterCompleted}`;
 };
+const initStorage = ()=>{
+    // get storage
+    if ((0, _storage.getFromStorage)("todos")) {
+        todos = (0, _storage.getFromStorage)("todos");
+        renderTodo();
+    }
+};
 
-},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","./storage":"h0qAZ","./init.js":"l17dj"}],"h0qAZ":[function(require,module,exports) {
+},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","./storage":"h0qAZ"}],"h0qAZ":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "addToStorage", ()=>addToStorage);

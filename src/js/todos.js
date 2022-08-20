@@ -1,13 +1,21 @@
-import {addToStorage, deleteFromStorage} from "./storage";
-import {todos} from './init.js'
+import {addToStorage, deleteFromStorage,getFromStorage} from "./storage";
+let todos = [];
 
 export const addTodo = () => {
     let inputTitle = document.querySelector('.todo-list__header-input-enter');
+    let date = new Date;
+    let options = {
+        weekday: 'short',
+        month: 'short',
+        day: 'numeric',
+        hour: 'numeric',
+        minute: 'numeric'
+    }
     let todo = {
         id: Date.now(),
         title: inputTitle.value,
         isCompleted: false,
-        date: new Date,
+        date: date.toLocaleString('ru', options),
     }
     todos.push(todo)
     addToStorage({key:'todos', value: todos});
@@ -97,14 +105,8 @@ export const renderTodo = (list = todos) => {
         // date
         let todoDate = document.createElement('p');
         todoDate.classList.add('todo-item__date');
-        let options = {
-            weekday: 'short',
-            month: 'short',
-            day: 'numeric',
-            hour: 'numeric',
-            minute: 'numeric'
-        }
-        todoDate.innerText = date.toLocaleString('ru', options);
+
+        todoDate.innerText = date;
         todoLabel.append(todoCheckBox);
         todoLabel.append(todoTitle);
         todoItem.append(deleteBtn);
@@ -121,4 +123,12 @@ export const renderCounters = () => {
     let countCompleted = document.querySelector('.todo-list__body-counter-completed');
     let counterCompleted = getTodoCompleted().length
     countCompleted.innerText = `Completed: ${counterCompleted}`
+}
+
+export const initStorage = () => {
+    // get storage
+    if (getFromStorage('todos'))  {
+        todos = getFromStorage('todos')
+        renderTodo()
+    }
 }
