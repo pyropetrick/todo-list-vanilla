@@ -1,0 +1,15 @@
+.action-button {
+  padding: 5px;
+  background-color: cyan;
+  border: 2px solid black;
+  border-radius: 5px;
+  font-size: 1rem;
+  font-weight: bold;
+  color: grey;
+  transition: background-color .3s ease-in-out;
+
+  &:hover {
+    cursor: pointer;
+    background-color: rgba(cyan, .7);
+  }
+}

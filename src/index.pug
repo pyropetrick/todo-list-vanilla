@@ -1,0 +1,26 @@
+extends pug/base
+
+block vars
+  - var title = "TodoList-Vanilla"
+
+block content
+  .todo-list--wrapper
+    .todo-list__header
+      button.action-button.todo-list__header-btn-delete-all Delete all
+      button.action-button.todo-list__header-btn-delete-last Delete last
+      input(type="text").todo-list__header-input-enter
+      button.action-button.todo-list__header-btn-add Add
+    .todo-list__body
+      p.todo-list__body-counter-all
+        | All:
+      p.todo-list__body-counter-completed
+        | Completed:
+      .todo-list__body-actions
+        button.action-button.todo-list__body-btn-show-all Show all
+        button.action-button.todo-list__body-btn-show-completed Show completed
+        input(type="search", placeholder="Search ...").todo-list__body-input-search
+    ul.todo-list__list
+
+
+block scripts 
+  script(src = "./js/main.js" type="module")

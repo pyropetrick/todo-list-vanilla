@@ -1,0 +1,19 @@
+
+// variables
+@import './vars';
+
+// mixins
+@import './mixins';
+
+// reset + standart style
+@import './adjustments';
+
+
+// components
+@import './components/btns';
+@import './components/input';
+
+
+// Blocks
+@import "home";
+

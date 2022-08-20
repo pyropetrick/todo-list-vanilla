@@ -1,0 +1,88 @@
+.todo-list {
+  &--wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 20px 0;
+    background-color: #ccc;
+    border: 2px solid black;
+    border-radius: 10px;
+    width: 700px;
+    padding: 15px;
+    margin: 0 auto;
+
+  }
+  &__header {
+    display: flex;
+    gap: 10px;
+    &-input-enter {
+      flex-grow: 1;
+    }
+  }
+  &__body {
+    display: flex;
+    color: grey;
+
+    &-counter-all {
+      margin-right: 20px;
+    }
+
+    &-actions {
+      margin-left: auto;
+      display: flex;
+      gap: 15px;
+    }
+
+  }
+  &__list {
+    display: flex;
+    flex-direction: column;
+    gap: 20px 0;
+  }
+}
+.todo-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px 0;
+  border: 2px solid black;
+  border-radius: 15px;
+  margin: 0 auto;
+  padding: 10px;
+  width: 500px;
+  &__btn-delete {
+    align-self: flex-end;
+    border: 1px solid black;
+    border-radius: 5px;
+    text-align: center;
+    padding: 0;
+    width: 30px;
+    height: 28px;
+  }
+  &__label {
+    display: flex;
+    gap: 25px;
+
+
+    &-title {
+      width: 300px;
+      background-color: #fff;
+      font-size: 1.5rem;
+      color: grey;
+      border: 1px solid black;
+      border-radius: 5px;
+    }
+
+  }
+  &__input-check-complete {
+    width: 30px;
+    height: 28px;
+    margin: 0;
+    border: 1px solid black;
+    border-radius: 5px;
+  }
+  &__date {
+    align-self: flex-end;
+    text-transform: capitalize;
+    color: grey;
+  }
+}
