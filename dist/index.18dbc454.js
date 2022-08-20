@@ -532,8 +532,96 @@ function hmrAcceptRun(bundle, id) {
 }
 
 },{}],"1SICI":[function(require,module,exports) {
+var _initJs = require("./init.js");
+document.addEventListener("DOMContentLoaded", (0, _initJs.init));
+
+},{"./init.js":"l17dj"}],"l17dj":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "todos", ()=>todos);
+parcelHelpers.export(exports, "init", ()=>init);
+var _todosJs = require("./todos.js");
+var _storage = require("./storage");
 let todos = [];
-function addTodo() {
+const init = ()=>{
+    // add todo
+    let addBtn = document.querySelector(".todo-list__header-btn-add");
+    addBtn.addEventListener("click", (0, _todosJs.addTodo));
+    // delete all
+    let dltAllBtn = document.querySelector(".todo-list__header-btn-delete-all");
+    dltAllBtn.addEventListener("click", (0, _todosJs.deleteAll));
+    // delete last
+    let dltLastBtn = document.querySelector(".todo-list__header-btn-delete-last");
+    dltLastBtn.addEventListener("click", (0, _todosJs.deleteLast));
+    // show all
+    let showAllBtn = document.querySelector(".todo-list__body-btn-show-all");
+    showAllBtn.addEventListener("click", (0, _todosJs.showAll));
+    // remove todo
+    let listTodo = document.querySelector(".todo-list__list");
+    listTodo.addEventListener("click", (0, _todosJs.removeTodo));
+    // check todo
+    listTodo.addEventListener("click", (0, _todosJs.checkTodo));
+    // show completed
+    let showCmlBtn = document.querySelector(".todo-list__body-btn-show-completed");
+    showCmlBtn.addEventListener("click", (0, _todosJs.showComplete));
+    // search todo
+    let searchInp = document.querySelector(".todo-list__body-input-search");
+    searchInp.addEventListener("input", (0, _todosJs.searchTodo));
+    // get storage
+    if ((0, _storage.getFromStorage)("todos")) {
+        todos = (0, _storage.getFromStorage)("todos");
+        (0, _todosJs.renderTodo)();
+    }
+    // render counter
+    (0, _todosJs.renderCounters)();
+};
+
+},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","./todos.js":"66sci","./storage":"h0qAZ"}],"gkKU3":[function(require,module,exports) {
+exports.interopDefault = function(a) {
+    return a && a.__esModule ? a : {
+        default: a
+    };
+};
+exports.defineInteropFlag = function(a) {
+    Object.defineProperty(a, "__esModule", {
+        value: true
+    });
+};
+exports.exportAll = function(source, dest) {
+    Object.keys(source).forEach(function(key) {
+        if (key === "default" || key === "__esModule" || dest.hasOwnProperty(key)) return;
+        Object.defineProperty(dest, key, {
+            enumerable: true,
+            get: function() {
+                return source[key];
+            }
+        });
+    });
+    return dest;
+};
+exports.export = function(dest, destName, get) {
+    Object.defineProperty(dest, destName, {
+        enumerable: true,
+        get: get
+    });
+};
+
+},{}],"66sci":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "addTodo", ()=>addTodo);
+parcelHelpers.export(exports, "deleteAll", ()=>deleteAll);
+parcelHelpers.export(exports, "deleteLast", ()=>deleteLast);
+parcelHelpers.export(exports, "showAll", ()=>showAll);
+parcelHelpers.export(exports, "showComplete", ()=>showComplete);
+parcelHelpers.export(exports, "removeTodo", ()=>removeTodo);
+parcelHelpers.export(exports, "checkTodo", ()=>checkTodo);
+parcelHelpers.export(exports, "searchTodo", ()=>searchTodo);
+parcelHelpers.export(exports, "renderTodo", ()=>renderTodo);
+parcelHelpers.export(exports, "renderCounters", ()=>renderCounters);
+var _storage = require("./storage");
+var _initJs = require("./init.js");
+const addTodo = ()=>{
     let inputTitle = document.querySelector(".todo-list__header-input-enter");
     let todo = {
         id: Date.now(),
@@ -541,52 +629,69 @@ function addTodo() {
         isCompleted: false,
         date: new Date
     };
-    todos.push(todo);
+    (0, _initJs.todos).push(todo);
+    (0, _storage.addToStorage)({
+        key: "todos",
+        value: (0, _initJs.todos)
+    });
     renderTodo();
     inputTitle.value = "";
-}
+};
 function getTodoCompleted() {
-    return todos.filter(({ isCompleted  })=>isCompleted);
+    return (0, _initJs.todos).filter(({ isCompleted  })=>isCompleted);
 }
-function deleteAll() {
+const deleteAll = ()=>{
     todos = [];
+    (0, _storage.deleteFromStorage)("todos");
     renderTodo();
-}
-function deleteLast() {
-    todos.pop();
+};
+const deleteLast = ()=>{
+    (0, _initJs.todos).pop();
+    (0, _initJs.todos).length ? (0, _storage.addToStorage)({
+        key: "todos",
+        value: (0, _initJs.todos)
+    }) : (0, _storage.deleteFromStorage)("todos");
     renderTodo();
-}
-function showAll() {
+};
+const showAll = ()=>{
     renderTodo();
-}
-function showComplete() {
+};
+const showComplete = ()=>{
     let filterTodo = getTodoCompleted();
     renderTodo(filterTodo);
-}
-function removeTodo({ target  }) {
+};
+const removeTodo = ({ target  })=>{
     if (target.classList.contains("todo-item__btn-delete")) {
         let todoItem = target.parentNode;
         let todoId = +todoItem.getAttribute("id");
-        let todoIdx = todos.findIndex(({ id  })=>todoId === id);
-        todos.splice(todoIdx, 1);
+        let todoIdx = (0, _initJs.todos).findIndex(({ id  })=>todoId === id);
+        (0, _initJs.todos).splice(todoIdx, 1);
+        (0, _storage.addToStorage)({
+            key: "todos",
+            value: (0, _initJs.todos)
+        });
         renderTodo();
     }
-}
-function checkTodo({ target  }) {
+};
+const checkTodo = ({ target  })=>{
     if (target.classList.contains("todo-item__input-check-complete")) {
         let todoItem = target.parentNode.parentNode;
         let todoId = +todoItem.getAttribute("id");
-        let todoIdx = todos.findIndex(({ id  })=>todoId === id);
-        todos[todoIdx].isCompleted = target.checked;
+        let todoIdx = (0, _initJs.todos).findIndex(({ id  })=>todoId === id);
+        (0, _initJs.todos)[todoIdx].isCompleted = target.checked;
+        (0, _storage.addToStorage)({
+            key: "todos",
+            value: (0, _initJs.todos)
+        });
         renderTodo();
     }
-}
-function searchTodo({ target  }) {
+};
+const searchTodo = ({ target  })=>{
     let searchValue = target.value;
-    let searchTodo1 = todos.filter(({ title  })=>title.includes(searchValue));
+    let searchTodo1 = (0, _initJs.todos).filter(({ title  })=>title.includes(searchValue));
     renderTodo(searchTodo1);
-}
-function renderTodo(list = todos) {
+};
+const renderTodo = (list = (0, _initJs.todos))=>{
     let todoList = document.querySelector(".todo-list__list");
     todoList.innerHTML = "";
     list.forEach(({ id , title , isCompleted , date  })=>{
@@ -632,41 +737,31 @@ function renderTodo(list = todos) {
     });
     // counters
     renderCounters();
-}
-function renderCounters() {
+};
+const renderCounters = ()=>{
     let countAll = document.querySelector(".todo-list__body-counter-all");
-    countAll.innerText = `All:${todos.length}`;
+    countAll.innerText = `All:${(0, _initJs.todos).length}`;
     let countCompleted = document.querySelector(".todo-list__body-counter-completed");
     let counterCompleted = getTodoCompleted().length;
     countCompleted.innerText = `Completed: ${counterCompleted}`;
-}
-function init() {
-    // add todo
-    let addBtn = document.querySelector(".todo-list__header-btn-add");
-    addBtn.addEventListener("click", addTodo);
-    // delete all
-    let dltAllBtn = document.querySelector(".todo-list__header-btn-delete-all");
-    dltAllBtn.addEventListener("click", deleteAll);
-    // delete last
-    let dltLastBtn = document.querySelector(".todo-list__header-btn-delete-last");
-    dltLastBtn.addEventListener("click", deleteLast);
-    // show all
-    let showAllBtn = document.querySelector(".todo-list__body-btn-show-all");
-    showAllBtn.addEventListener("click", showAll);
-    // remove todo
-    let listTodo = document.querySelector(".todo-list__list");
-    listTodo.addEventListener("click", removeTodo);
-    // check todo
-    listTodo.addEventListener("click", checkTodo);
-    // show completed
-    let showCmlBtn = document.querySelector(".todo-list__body-btn-show-completed");
-    showCmlBtn.addEventListener("click", showComplete);
-    // search todo
-    let searchInp = document.querySelector(".todo-list__body-input-search");
-    searchInp.addEventListener("input", searchTodo);
-}
-document.addEventListener("DOMContentLoaded", init);
+};
 
-},{}]},["jQVXF","1SICI"], "1SICI", "parcelRequire54eb")
+},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","./storage":"h0qAZ","./init.js":"l17dj"}],"h0qAZ":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "addToStorage", ()=>addToStorage);
+parcelHelpers.export(exports, "deleteFromStorage", ()=>deleteFromStorage);
+parcelHelpers.export(exports, "getFromStorage", ()=>getFromStorage);
+const addToStorage = ({ key , value  })=>{
+    return localStorage.setItem(key, JSON.stringify(value));
+};
+const deleteFromStorage = (key)=>{
+    return localStorage.removeItem(key);
+};
+const getFromStorage = (key)=>{
+    return localStorage.getItem(key) ? JSON.parse(localStorage.getItem(key)) : undefined;
+};
+
+},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}]},["jQVXF","1SICI"], "1SICI", "parcelRequire54eb")
 
 //# sourceMappingURL=index.18dbc454.js.map
